@@ -51,7 +51,7 @@ export class ActorRdfResolveQuadPatternHdt extends ActorRdfResolveQuadPatternSou
   }
 
   public async test(action: IActionRdfResolveQuadPattern): Promise<IActorTest> {
-    if (!this.hasContextSingleSource('hdtFile', action.context)) {
+    if (!this.hasContextSingleSourceOfType('hdtFile', action.context)) {
       throw new Error(this.name + ' requires a single source with a hdtFile to be present in the context.');
     }
     return true;
@@ -64,7 +64,7 @@ export class ActorRdfResolveQuadPatternHdt extends ActorRdfResolveQuadPatternSou
   }
 
   protected async getSource(context: ActionContext): Promise<ILazyQuadSource> {
-    const hdtFile: string = this.getContextSource(context).value;
+    const hdtFile: string = (<any> this.getContextSource(context)).value;
     if (!this.hdtDocuments[hdtFile]) {
       await this.initializeHdt(hdtFile);
     }
