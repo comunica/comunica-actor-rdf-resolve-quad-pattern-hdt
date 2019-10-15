@@ -1,6 +1,7 @@
 import {ActorRdfResolveQuadPatternSource, IActionRdfResolveQuadPattern,
   IActorRdfResolveQuadPatternOutput, ILazyQuadSource} from "@comunica/bus-rdf-resolve-quad-pattern";
 import {ActionContext, IActorArgs, IActorTest} from "@comunica/core";
+import {AsyncIterator} from "asynciterator";
 import * as HDT from "hdt";
 import * as RDF from "rdf-js";
 import {HdtQuadSource} from "./HdtQuadSource";
@@ -71,6 +72,20 @@ export class ActorRdfResolveQuadPatternHdt extends ActorRdfResolveQuadPatternSou
     return new HdtQuadSource(await this.hdtDocuments[hdtFile]);
   }
 
+  protected getMetadata(source: ILazyQuadSource, pattern: RDF.BaseQuad, context: ActionContext,
+                        data: AsyncIterator<RDF.Quad> & RDF.Stream): () => Promise<{[id: string]: any}> {
+    const promise = new Promise((resolve, reject) => {
+      data.on('error', reject);
+      data.on('end', () => {
+        reject(new Error('No count metadata was found'));
+      });
+      data.once('totalItems', (totalItems: number) => {
+        resolve({ totalItems });
+      });
+    });
+    return () => promise;
+  }
+
   protected async getOutput(source: RDF.Source, pattern: RDF.Quad, context: ActionContext)
   : Promise<IActorRdfResolveQuadPatternOutput> {
     // Attach totalItems to the output
@@ -81,15 +96,6 @@ export class ActorRdfResolveQuadPatternHdt extends ActorRdfResolveQuadPatternSou
       if (this.shouldClose) {
         this.close();
       }
-    });
-    output.metadata = () => new Promise((resolve, reject) => {
-      output.data.on('error', reject);
-      output.data.on('end', () => {
-        reject(new Error('No count metadata was found'));
-      });
-      output.data.once('totalItems', (totalItems: number) => {
-        resolve({ totalItems });
-      });
     });
     return output;
   }
