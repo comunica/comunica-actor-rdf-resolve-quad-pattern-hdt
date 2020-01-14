@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.5.2"></a>
+## [v1.5.2](https://github.com/comunica/comunica-actor-rdf-resolve-quad-pattern-hdt/tree/master/packages/actor-rdf-resolve-quad-pattern-hdt/compare/v1.5.1...v1.5.2) - 2020-01-14
+
+### Fixed
+* [Update hdt to fix builds on Node 12](https://github.com/comunica/comunica-actor-rdf-resolve-quad-pattern-hdt/tree/master/packages/actor-rdf-resolve-quad-pattern-hdt/commit/733e5044458c2d78dfb671a3672e540f1c35bc82)
+
 <a name="v1.5.1"></a>
 ## [v1.5.1](https://github.com/comunica/comunica-actor-rdf-resolve-quad-pattern-hdt/tree/master/packages/actor-rdf-resolve-quad-pattern-hdt/compare/v1.5.0...v1.5.1) - 2020-01-14
 
