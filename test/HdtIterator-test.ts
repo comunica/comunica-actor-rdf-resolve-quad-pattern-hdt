@@ -9,14 +9,14 @@ describe('HdtIterator', () => {
 
   beforeEach(() => {
     hdtDocument = new MockedHdtDocument([
-      t('s1', 'p1', 'o1'),
-      t('s1', 'p1', 'o2'),
-      t('s1', 'p2', 'o1'),
-      t('s1', 'p2', 'o2'),
-      t('s2', 'p1', 'o1'),
-      t('s2', 'p1', 'o2'),
-      t('s2', 'p2', 'o1'),
-      t('s2', 'p2', 'o2'),
+      quad('s1', 'p1', 'o1'),
+      quad('s1', 'p1', 'o2'),
+      quad('s1', 'p2', 'o1'),
+      quad('s1', 'p2', 'o2'),
+      quad('s2', 'p1', 'o1'),
+      quad('s2', 'p1', 'o2'),
+      quad('s2', 'p2', 'o1'),
+      quad('s2', 'p2', 'o2'),
     ]);
   });
 
@@ -130,7 +130,3 @@ describe('HdtIterator', () => {
     });
   });
 });
-
-function t(subject, predicate, object) {
-  return { subject, predicate, object };
-}

@@ -1,38 +1,35 @@
+import * as RDF from "rdf-js";
 import * as HDT from "hdt";
 import {Document, SearchLiteralsOpts, SearchLiteralsResult, SearchResult, SearchTermsOpts} from "hdt";
-import {IStringQuad} from "rdf-string/lib/TermUtil";
+import {quad} from "@rdfjs/data-model";
 
 export class MockedHdtDocument implements HDT.Document  {
 
   public closed: boolean = false;
 
-  private readonly triples: IStringQuad[];
+  private readonly triples: RDF.BaseQuad[];
   private error: Error = null;
 
-  constructor(triples: IStringQuad[]) {
+  constructor(triples: RDF.BaseQuad[]) {
     this.triples = triples;
   }
 
-  protected static triplesMatch(a: IStringQuad, b: IStringQuad): boolean {
+  protected static triplesMatch(a: RDF.BaseQuad, b: RDF.BaseQuad): boolean {
     return MockedHdtDocument.termsMatch(a.subject, b.subject)
       && MockedHdtDocument.termsMatch(a.predicate, b.predicate)
       && MockedHdtDocument.termsMatch(a.object, b.object);
   }
 
-  protected static termsMatch(a: string, b: string): boolean {
-    return MockedHdtDocument.isVariable(a) || MockedHdtDocument.isVariable(b) || a === b;
+  protected static termsMatch(a: RDF.Term, b: RDF.Term): boolean {
+    return !a || a.termType === 'Variable' || !b || b.termType === 'Variable' || a.equals(b);
   }
 
-  protected static isVariable(a: string): boolean {
-    return !a || a.charAt(0) === '?' || a.charAt(0) === '_';
-  }
-
-  public async searchTriples(subject: string, predicate: string, object: string,
+  public async searchTriples(subject: RDF.Term, predicate: RDF.Term, object: RDF.Term,
                              options: {[id: string]: any}): Promise<HDT.SearchResult> {
     if (this.error) {
       throw this.error;
     }
-    const tripleIn = { subject, predicate, object };
+    const tripleIn = quad<RDF.BaseQuad>(subject, predicate, object);
     const offset = options.offset || 0;
     const limit = Math.min(options.limit, this.triples.length);
     let i = 0;
@@ -48,7 +45,7 @@ export class MockedHdtDocument implements HDT.Document  {
     return { triples, totalCount: i, hasExactCount: true };
   }
 
-  public async countTriples(sub?: string, pred?: string, obj?: string): Promise<SearchResult> {
+  public async countTriples(sub?: RDF.Term, pred?: RDF.Term, obj?: RDF.Term): Promise<SearchResult> {
     return null;
   }
 

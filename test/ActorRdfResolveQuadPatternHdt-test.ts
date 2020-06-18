@@ -38,14 +38,14 @@ describe('ActorRdfResolveQuadPatternHdt', () => {
     beforeEach(() => {
       actor = new ActorRdfResolveQuadPatternHdt({ name: 'actor', bus });
       hdtDocument = new MockedHdtDocument([
-        t('s1', 'p1', 'o1'),
-        t('s1', 'p1', 'o2'),
-        t('s1', 'p2', 'o1'),
-        t('s1', 'p2', 'o2'),
-        t('s2', 'p1', 'o1'),
-        t('s2', 'p1', 'o2'),
-        t('s2', 'p2', 'o1'),
-        t('s2', 'p2', 'o2'),
+        quad('s1', 'p1', 'o1'),
+        quad('s1', 'p1', 'o2'),
+        quad('s1', 'p2', 'o1'),
+        quad('s1', 'p2', 'o2'),
+        quad('s2', 'p1', 'o1'),
+        quad('s2', 'p1', 'o2'),
+        quad('s2', 'p2', 'o1'),
+        quad('s2', 'p2', 'o2'),
       ]);
       require('hdt').__setMockedDocument(hdtDocument);
     });
@@ -245,7 +245,3 @@ describe('ActorRdfResolveQuadPatternHdt', () => {
     });
   });
 });
-
-function t(subject, predicate, object) {
-  return { subject, predicate, object };
-}
