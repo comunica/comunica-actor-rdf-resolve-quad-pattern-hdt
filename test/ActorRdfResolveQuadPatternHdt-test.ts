@@ -191,8 +191,8 @@ describe('ActorRdfResolveQuadPatternHdt', () => {
       return actor.run({ pattern, context: ActionContext(
           { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: 'abc'  }}) })
         .then(async (output) => {
-          expect(await output.metadata()).toEqual({ totalItems: 0 });
           expect(await arrayifyStream(output.data)).toEqual([]);
+          expect(await output.metadata()).toEqual({ totalItems: 0 });
         });
     });
 
