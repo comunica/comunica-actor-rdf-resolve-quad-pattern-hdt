@@ -1,14 +1,12 @@
-import {ActorRdfResolveQuadPattern} from "@comunica/bus-rdf-resolve-quad-pattern";
-import {ActionContext, Bus} from "@comunica/core";
-import {ActorRdfResolveQuadPatternHdt} from "../lib/ActorRdfResolveQuadPatternHdt";
-import {MockedHdtDocument} from "../mocks/MockedHdtDocument";
-const quad = require('rdf-quad');
+import { ActorRdfResolveQuadPattern } from '@comunica/bus-rdf-resolve-quad-pattern';
+import { ActionContext, Bus } from '@comunica/core';
+import { ActorRdfResolveQuadPatternHdt } from '../lib/ActorRdfResolveQuadPatternHdt';
+import { MockedHdtDocument } from '../mocks/MockedHdtDocument';
 const arrayifyStream = require('arrayify-stream');
-
-// tslint:disable:object-literal-sort-keys
+const quad = require('rdf-quad');
 
 describe('ActorRdfResolveQuadPatternHdt', () => {
-  let bus;
+  let bus: any;
 
   beforeEach(() => {
     bus = new Bus({ name: 'bus' });
@@ -51,8 +49,10 @@ describe('ActorRdfResolveQuadPatternHdt', () => {
     });
 
     it('should test', () => {
-      return expect(actor.test({ pattern: null, context: ActionContext(
-        { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: 'abc'  }}) }))
+      return expect(actor.test({ pattern: null,
+        context: ActionContext(
+          { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: 'abc' }},
+        ) }))
         .resolves.toBeTruthy();
     });
 
@@ -65,27 +65,35 @@ describe('ActorRdfResolveQuadPatternHdt', () => {
     });
 
     it('should not test on an invalid file', () => {
-      return expect(actor.test({ pattern: null, context: ActionContext(
-        { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: null  }}) }))
+      return expect(actor.test({ pattern: null,
+        context: ActionContext(
+          { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: null }},
+        ) }))
         .rejects.toBeTruthy();
     });
 
     it('should not test on no file', () => {
-      return expect(actor.test({ pattern: null, context: ActionContext(
-        { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'entrypoint', value: null  }}) }))
+      return expect(actor.test({ pattern: null,
+        context: ActionContext(
+          { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'entrypoint', value: null }},
+        ) }))
         .rejects.toBeTruthy();
     });
 
     it('should not test on no sources', () => {
-      return expect(actor.test({ pattern: null, context: ActionContext(
-        { '@comunica/bus-rdf-resolve-quad-pattern:sources': [] }) }))
+      return expect(actor.test({ pattern: null,
+        context: ActionContext(
+          { '@comunica/bus-rdf-resolve-quad-pattern:sources': []},
+        ) }))
         .rejects.toBeTruthy();
     });
 
     it('should not test on multiple sources', () => {
       return expect(actor.test(
-        { pattern: null, context: ActionContext({ '@comunica/bus-rdf-resolve-quad-pattern:sources':
-              [{ type: 'hdtFile', value: 'a' }, { type: 'hdtFile', value: 'b' }] }) }))
+        { pattern: null,
+          context: ActionContext({ '@comunica/bus-rdf-resolve-quad-pattern:sources':
+              [{ type: 'hdtFile', value: 'a' }, { type: 'hdtFile', value: 'b' }]}) },
+      ))
         .rejects.toBeTruthy();
     });
 
@@ -99,23 +107,23 @@ describe('ActorRdfResolveQuadPatternHdt', () => {
 
     it('should allow a HDT quad source to be created for a context with a valid file', () => {
       return expect((<any> actor).getSource(ActionContext({ '@comunica/bus-rdf-resolve-quad-pattern:source':
-          { type: 'hdtFile', value: 'myFile'  }})))
+          { type: 'hdtFile', value: 'myFile' }})))
         .resolves.toBeTruthy();
     });
 
     it('should fail on creating a HDT quad source for a context with an invalid file', () => {
       return expect((<any> actor).getSource({ '@comunica/bus-rdf-resolve-quad-pattern:sources':
-          { type: 'hdtFile', value: null  }})).rejects.toBeTruthy();
+          { type: 'hdtFile', value: null }})).rejects.toBeTruthy();
     });
 
     it('should create only a HDT quad source only once per file', () => {
-      let doc1 = null;
+      let doc1: any = null;
       return (<any> actor).getSource(ActionContext({ '@comunica/bus-rdf-resolve-quad-pattern:source':
-          { type: 'hdtFile', value: 'myFile'  }}))
+          { type: 'hdtFile', value: 'myFile' }}))
         .then((file: any) => {
           doc1 = file.hdtDocument;
           return (<any> actor).getSource(ActionContext({ '@comunica/bus-rdf-resolve-quad-pattern:source':
-              { type: 'hdtFile', value: 'myFile'  }}));
+              { type: 'hdtFile', value: 'myFile' }}));
         })
         .then((file: any) => {
           expect(file.hdtDocument).toBe(doc1);
@@ -123,7 +131,7 @@ describe('ActorRdfResolveQuadPatternHdt', () => {
     });
 
     it('should create different documents in HDT quad source for different files', () => {
-      let doc1 = null;
+      let doc1: any = null;
       return (<any> actor).getSource(ActionContext({ '@comunica/bus-rdf-resolve-quad-pattern:source':
           { type: 'hdtFile', value: 'myFile1' }}))
         .then((file: any) => {
@@ -137,17 +145,19 @@ describe('ActorRdfResolveQuadPatternHdt', () => {
         });
     });
 
-    it('should initialize HDT sources when passed to the constructor', async () => {
-      const myActor = new ActorRdfResolveQuadPatternHdt({ name: 'actor', bus, hdtFiles: ['myFile'] });
+    it('should initialize HDT sources when passed to the constructor', async() => {
+      const myActor = new ActorRdfResolveQuadPatternHdt({ name: 'actor', bus, hdtFiles: [ 'myFile' ]});
       await myActor.initialize();
-      return expect(myActor.hdtDocuments.myFile).resolves.toBeInstanceOf(MockedHdtDocument);
+      await expect(myActor.hdtDocuments.myFile).resolves.toBeInstanceOf(MockedHdtDocument);
     });
 
     it('should run on ? ? ?', () => {
       const pattern = quad('?', '?', '?');
-      return actor.run({ pattern, context: ActionContext(
-        { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: 'abc'  }}) })
-        .then(async (output) => {
+      return actor.run({ pattern,
+        context: ActionContext(
+          { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: 'abc' }},
+        ) })
+        .then(async output => {
           expect(await new Promise(resolve => output.data.getProperty('metadata', resolve))).toEqual({ totalItems: 8 });
           expect(await arrayifyStream(output.data)).toEqual([
             quad('s1', 'p1', 'o1'),
@@ -164,18 +174,22 @@ describe('ActorRdfResolveQuadPatternHdt', () => {
 
     it('should run on ? ? ? without data', () => {
       const pattern = quad('?', '?', '?');
-      return actor.run({ pattern, context: ActionContext(
-          { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: 'abc'  }}) })
-        .then(async (output) => {
+      return actor.run({ pattern,
+        context: ActionContext(
+          { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: 'abc' }},
+        ) })
+        .then(async output => {
           expect(await new Promise(resolve => output.data.getProperty('metadata', resolve))).toEqual({ totalItems: 8 });
         });
     });
 
     it('should run on s1 ? ?', () => {
       const pattern = quad('s1', '?', '?');
-      return actor.run({ pattern, context: ActionContext(
-          { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: 'abc'  }}) })
-        .then(async (output) => {
+      return actor.run({ pattern,
+        context: ActionContext(
+          { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: 'abc' }},
+        ) })
+        .then(async output => {
           expect(await new Promise(resolve => output.data.getProperty('metadata', resolve))).toEqual({ totalItems: 4 });
           expect(await arrayifyStream(output.data)).toEqual([
             quad('s1', 'p1', 'o1'),
@@ -188,9 +202,11 @@ describe('ActorRdfResolveQuadPatternHdt', () => {
 
     it('should run on s3 ? ?', () => {
       const pattern = quad('s3', '?', '?');
-      return actor.run({ pattern, context: ActionContext(
-          { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: 'abc'  }}) })
-        .then(async (output) => {
+      return actor.run({ pattern,
+        context: ActionContext(
+          { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: 'abc' }},
+        ) })
+        .then(async output => {
           expect(await arrayifyStream(output.data)).toEqual([]);
           expect(await new Promise(resolve => output.data.getProperty('metadata', resolve))).toEqual({ totalItems: 0 });
         });
@@ -208,9 +224,11 @@ describe('ActorRdfResolveQuadPatternHdt', () => {
       (<any> actor).queries--;
       expect((<any> actor).shouldClose).toBe(true);
       const pattern = quad('s3', '?', '?');
-      return actor.run({ pattern, context: ActionContext(
-          { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: 'abc'  }}) })
-        .then(async (output) => {
+      return actor.run({ pattern,
+        context: ActionContext(
+          { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: 'abc' }},
+        ) })
+        .then(async output => {
           expect(await arrayifyStream(output.data)).toBeTruthy();
           expect((<any> actor).shouldClose).toBe(false);
           expect(actor.closed).toBe(true);
@@ -230,15 +248,15 @@ describe('ActorRdfResolveQuadPatternHdt', () => {
       return expect(() => actor.deinitialize()).not.toThrow();
     });
 
-    it('should close on process.exit', () => {
-      actor.deinitialize();
+    it('should close on process.exit', async() => {
+      await actor.deinitialize();
       process.emit('exit', 0);
       expect(actor.closed).toBe(true);
       actor.closed = false;
     });
 
-    it('should close on process.SIGINT', () => {
-      actor.deinitialize();
+    it('should close on process.SIGINT', async() => {
+      await actor.deinitialize();
       process.emit(<any> 'SIGINT');
       expect(actor.closed).toBe(true);
       actor.closed = false;

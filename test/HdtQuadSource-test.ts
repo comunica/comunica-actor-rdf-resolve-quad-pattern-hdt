@@ -1,12 +1,12 @@
-import {DataFactory} from "rdf-data-factory";
-import {HdtIterator} from "../lib/HdtIterator";
-import {HdtQuadSource} from "../lib/HdtQuadSource";
-import {MockedHdtDocument} from "../mocks/MockedHdtDocument";
+import { DataFactory } from 'rdf-data-factory';
+import { HdtIterator } from '../lib/HdtIterator';
+import { HdtQuadSource } from '../lib/HdtQuadSource';
+import { MockedHdtDocument } from '../mocks/MockedHdtDocument';
 
 const DF = new DataFactory();
 
 describe('HdtQuadSource', () => {
-  let hdtDocument;
+  let hdtDocument: any;
 
   beforeEach(() => {
     hdtDocument = new MockedHdtDocument([]);

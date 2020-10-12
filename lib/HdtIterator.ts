@@ -1,9 +1,9 @@
-import {BufferedIterator} from "asynciterator";
-import * as HDT from "hdt";
-import * as RDF from "rdf-js";
+import { BufferedIterator } from 'asynciterator';
+// eslint-disable-next-line import/namespace
+import type * as HDT from 'hdt';
+import type * as RDF from 'rdf-js';
 
 export class HdtIterator extends BufferedIterator<RDF.Quad> {
-
   protected readonly hdtDocument: HDT.Document;
   protected readonly subject?: RDF.Term;
   protected readonly predicate?: RDF.Term;
@@ -11,7 +11,13 @@ export class HdtIterator extends BufferedIterator<RDF.Quad> {
 
   protected position: number;
 
-  constructor(hdtDocument: HDT.Document, subject?: RDF.Term, predicate?: RDF.Term, object?: RDF.Term, options?: any) {
+  public constructor(
+    hdtDocument: HDT.Document,
+    subject?: RDF.Term,
+    predicate?: RDF.Term,
+    object?: RDF.Term,
+    options?: any,
+  ) {
     super(options || { autoStart: false });
     this.hdtDocument = hdtDocument;
     this.subject = subject;
@@ -31,20 +37,18 @@ export class HdtIterator extends BufferedIterator<RDF.Quad> {
       this.close();
       return done();
     }
-    this.hdtDocument.searchTriples(this.subject, this.predicate, this.object,
-      { offset: this.position, limit: count })
+    this.hdtDocument.searchTriples(this.subject, this.predicate, this.object, { offset: this.position, limit: count })
       .then((searchResult: HDT.SearchResult) => {
-        searchResult.triples.forEach((t) => this._push(t));
+        searchResult.triples.forEach(t => this._push(t));
         if (searchResult.triples.length < count) {
           this.close();
         }
         done();
       })
-      .catch((error) => {
+      .catch(error => {
         this.emit('error', error);
         return done();
       });
     this.position += count;
   }
-
 }
