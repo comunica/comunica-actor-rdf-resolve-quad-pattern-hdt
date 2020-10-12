@@ -1,7 +1,9 @@
-import {namedNode, variable} from "@rdfjs/data-model";
+import {DataFactory} from "rdf-data-factory";
 import {HdtIterator} from "../lib/HdtIterator";
 import {HdtQuadSource} from "../lib/HdtQuadSource";
 import {MockedHdtDocument} from "../mocks/MockedHdtDocument";
+
+const DF = new DataFactory();
 
 describe('HdtQuadSource', () => {
   let hdtDocument;
@@ -31,28 +33,13 @@ describe('HdtQuadSource', () => {
       source = new HdtQuadSource(hdtDocument, 10);
     });
 
-    it('should throw an error on a subject regex call', () => {
-      return expect(() => source.match(/.*/)).toThrow();
-    });
-
-    it('should throw an error on a predicate regex call', () => {
-      return expect(() => source.match(null, /.*/)).toThrow();
-    });
-
-    it('should throw an error on a object regex call', () => {
-      return expect(() => source.match(null, null, /.*/)).toThrow();
-    });
-
-    it('should throw an error on a graph regex call', () => {
-      return expect(() => source.match(null, null, null, /.*/)).toThrow();
-    });
-
     it('should throw an error when queried on the non-default graph', () => {
-      return expect(() => source.match(null, null, null, namedNode('http://ex.org'))).toThrow();
+      return expect(() => source.match(null, null, null, DF.namedNode('http://ex.org'))).toThrow();
     });
 
     it('should return a HdtIterator', () => {
-      return expect(source.match(variable('v'), variable('v'), variable('v'))).toBeInstanceOf(HdtIterator);
+      return expect(source.match(DF.variable('v'), DF.variable('v'), DF.variable('v'), DF.defaultGraph()))
+        .toBeInstanceOf(HdtIterator);
     });
   });
 });

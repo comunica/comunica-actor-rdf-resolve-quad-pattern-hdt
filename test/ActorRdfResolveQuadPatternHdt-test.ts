@@ -148,7 +148,7 @@ describe('ActorRdfResolveQuadPatternHdt', () => {
       return actor.run({ pattern, context: ActionContext(
         { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: 'abc'  }}) })
         .then(async (output) => {
-          expect(await output.metadata()).toEqual({ totalItems: 8 });
+          expect(await new Promise(resolve => output.data.getProperty('metadata', resolve))).toEqual({ totalItems: 8 });
           expect(await arrayifyStream(output.data)).toEqual([
             quad('s1', 'p1', 'o1'),
             quad('s1', 'p1', 'o2'),
@@ -167,7 +167,7 @@ describe('ActorRdfResolveQuadPatternHdt', () => {
       return actor.run({ pattern, context: ActionContext(
           { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: 'abc'  }}) })
         .then(async (output) => {
-          expect(await output.metadata()).toEqual({ totalItems: 8 });
+          expect(await new Promise(resolve => output.data.getProperty('metadata', resolve))).toEqual({ totalItems: 8 });
         });
     });
 
@@ -176,7 +176,7 @@ describe('ActorRdfResolveQuadPatternHdt', () => {
       return actor.run({ pattern, context: ActionContext(
           { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: 'abc'  }}) })
         .then(async (output) => {
-          expect(await output.metadata()).toEqual({ totalItems: 4 });
+          expect(await new Promise(resolve => output.data.getProperty('metadata', resolve))).toEqual({ totalItems: 4 });
           expect(await arrayifyStream(output.data)).toEqual([
             quad('s1', 'p1', 'o1'),
             quad('s1', 'p1', 'o2'),
@@ -192,7 +192,7 @@ describe('ActorRdfResolveQuadPatternHdt', () => {
           { '@comunica/bus-rdf-resolve-quad-pattern:source': { type: 'hdtFile', value: 'abc'  }}) })
         .then(async (output) => {
           expect(await arrayifyStream(output.data)).toEqual([]);
-          expect(await output.metadata()).toEqual({ totalItems: 0 });
+          expect(await new Promise(resolve => output.data.getProperty('metadata', resolve))).toEqual({ totalItems: 0 });
         });
     });
 

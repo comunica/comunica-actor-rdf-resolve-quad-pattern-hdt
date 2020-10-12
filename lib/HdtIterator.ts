@@ -19,11 +19,11 @@ export class HdtIterator extends BufferedIterator<RDF.Quad> {
     this.object = object;
     this.position = options && options.offset || 0;
 
-    this.on('newListener', (eventName) => {
-      if (eventName === 'totalItems') {
-        setImmediate(() => this._fillBuffer());
-      }
-    });
+    this.hdtDocument.countTriples(this.subject, this.predicate, this.object)
+      .then((searchResult: HDT.SearchResult) => {
+        this.setProperty('metadata', { totalItems: searchResult.totalCount });
+      })
+      .catch(error => this.destroy(error));
   }
 
   public _read(count: number, done: () => void): void {
@@ -34,7 +34,6 @@ export class HdtIterator extends BufferedIterator<RDF.Quad> {
     this.hdtDocument.searchTriples(this.subject, this.predicate, this.object,
       { offset: this.position, limit: count })
       .then((searchResult: HDT.SearchResult) => {
-        this.emit('totalItems', searchResult.totalCount);
         searchResult.triples.forEach((t) => this._push(t));
         if (searchResult.triples.length < count) {
           this.close();

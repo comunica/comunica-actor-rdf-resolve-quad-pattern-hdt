@@ -1,7 +1,7 @@
 import * as RDF from "rdf-js";
 import * as HDT from "hdt";
 import {Document, SearchLiteralsOpts, SearchLiteralsResult, SearchResult, SearchTermsOpts} from "hdt";
-import {quad} from "@rdfjs/data-model";
+import {DataFactory} from "rdf-data-factory";
 
 export class MockedHdtDocument implements HDT.Document  {
 
@@ -29,7 +29,7 @@ export class MockedHdtDocument implements HDT.Document  {
     if (this.error) {
       throw this.error;
     }
-    const tripleIn = quad<RDF.BaseQuad>(subject, predicate, object);
+    const tripleIn = new DataFactory<RDF.BaseQuad>().quad(subject, predicate, object);
     const offset = options.offset || 0;
     const limit = Math.min(options.limit, this.triples.length);
     let i = 0;
@@ -45,8 +45,18 @@ export class MockedHdtDocument implements HDT.Document  {
     return { triples, totalCount: i, hasExactCount: true };
   }
 
-  public async countTriples(sub?: RDF.Term, pred?: RDF.Term, obj?: RDF.Term): Promise<SearchResult> {
-    return null;
+  public async countTriples(subject?: RDF.Term, predicate?: RDF.Term, object?: RDF.Term): Promise<SearchResult> {
+    if (this.error) {
+      throw this.error;
+    }
+    const tripleIn = new DataFactory<RDF.BaseQuad>().quad(subject, predicate, object);
+    let i = 0;
+    for (const triple of this.triples) {
+      if (MockedHdtDocument.triplesMatch(tripleIn, triple)) {
+        i++;
+      }
+    }
+    return { triples: [], totalCount: i, hasExactCount: true };
   }
 
   public async searchLiterals(substring: string, opts?: SearchLiteralsOpts): Promise<SearchLiteralsResult> {
