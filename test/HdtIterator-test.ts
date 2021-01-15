@@ -167,7 +167,7 @@ describe('HdtIterator', () => {
   });
 
   it('should resolve to an error if the document emits an error', async() => {
-    const e = new Error();
+    const e = new Error('HdtIterator-test');
     hdtDocument.setError(e);
     await expect(arrayifyStream(new HdtIterator(hdtDocument,
       DF.variable('s'),
