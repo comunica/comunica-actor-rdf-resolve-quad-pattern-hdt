@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.8.0"></a>
+## [v1.8.0](https://github.com/comunica/comunica-actor-rdf-resolve-quad-pattern-hdt/compare/v1.7.0...v1.8.0) - 2021-01-15
+
+### Changed
+* [Update to Comunica 1.19](https://github.com/comunica/comunica-actor-rdf-resolve-quad-pattern-hdt/commit/19ae0b91ce867a82173cf3b8e1e966d8b58b24fe)
+
 <a name="v1.7.0"></a>
 ## [v1.7.0](https://github.com/comunica/comunica-actor-rdf-resolve-quad-pattern-hdt/compare/v1.6.0...v1.7.0) - 2020-10-12
 
