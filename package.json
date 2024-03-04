@@ -31,7 +31,7 @@
     "index.js"
   ],
   "dependencies": {
-    "@types/node": "^13.1.6",
+    "@types/node": "^20.0.0",
     "hdt": "^3.0.2",
     "rdf-data-factory": "^1.0.3"
   },
